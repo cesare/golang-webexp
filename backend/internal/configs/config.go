@@ -20,6 +20,10 @@ type ConfigLoader struct {
 	path string
 }
 
+func NewConfigLoader(path string) *ConfigLoader {
+	return &ConfigLoader{path: path}
+}
+
 func (cl *ConfigLoader) Load() (*Config, error) {
 	f, err := os.Open(cl.path)
 	if err != nil {
