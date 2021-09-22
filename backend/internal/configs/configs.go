@@ -12,12 +12,12 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	bind string
-	port uint16
+	Bind string
+	Port uint16
 }
 
 func (c *ServerConfig) BindAddress() string {
-	return fmt.Sprintf("%s:%d", c.bind, c.port)
+	return fmt.Sprintf("%s:%d", c.Bind, c.Port)
 }
 
 type ConfigLoader struct {
@@ -37,6 +37,7 @@ func (cl *ConfigLoader) Load() (*Config, error) {
 
 	var config Config
 	decoder := toml.NewDecoder(f)
+	decoder.SetStrict(true)
 	err = decoder.Decode(&config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse configuration file %s: %s", cl.path, err.Error())
