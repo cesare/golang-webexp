@@ -12,8 +12,12 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Bind string
-	Port uint16
+	bind string
+	port uint16
+}
+
+func (c *ServerConfig) BindAddress() string {
+	return fmt.Sprintf("%s:%d", c.bind, c.port)
 }
 
 type ConfigLoader struct {
