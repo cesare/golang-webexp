@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"webexp/internal/configs"
@@ -8,7 +9,11 @@ import (
 )
 
 func main() {
-	config, err := configs.NewConfigLoader("./webexp.toml").Load()
+	var configPath string
+	flag.StringVar(&configPath, "config-path", "webexp.toml", "specify path to configuration file")
+	flag.Parse()
+
+	config, err := configs.NewConfigLoader(configPath).Load()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to load config: %s\n", err.Error())
 		os.Exit(111)
