@@ -8,12 +8,21 @@ import (
 	"webexp/internal/server/http"
 )
 
-func main() {
+type Arguments struct {
+	ConfigPath string
+}
+
+func NewArguments() *Arguments {
 	var configPath string
 	flag.StringVar(&configPath, "config-path", "webexp.toml", "specify path to configuration file")
 	flag.Parse()
 
-	config, err := configs.NewConfigLoader(configPath).Load()
+	return &Arguments{ConfigPath: configPath}
+}
+
+func main() {
+	args := NewArguments()
+	config, err := configs.NewConfigLoader(args.ConfigPath).Load()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to load config: %s\n", err.Error())
 		os.Exit(111)
