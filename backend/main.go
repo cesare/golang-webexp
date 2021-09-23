@@ -9,7 +9,7 @@ import (
 )
 
 type arguments struct {
-	ConfigPath string
+	configPath string
 }
 
 func newArguments() *arguments {
@@ -17,12 +17,12 @@ func newArguments() *arguments {
 	flag.StringVar(&configPath, "config-path", "webexp.toml", "specify path to configuration file")
 	flag.Parse()
 
-	return &arguments{ConfigPath: configPath}
+	return &arguments{configPath: configPath}
 }
 
 func main() {
 	args := newArguments()
-	config, err := configs.NewConfigLoader(args.ConfigPath).Load()
+	config, err := configs.NewConfigLoader(args.configPath).Load()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to load config: %s\n", err.Error())
 		os.Exit(111)
