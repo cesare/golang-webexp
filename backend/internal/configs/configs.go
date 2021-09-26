@@ -9,6 +9,7 @@ import (
 
 type Config struct {
 	Server   ServerConfig
+	App      AppConfig
 	Auth     AuthConfig
 	Frontend FrontendConfig
 }
@@ -20,6 +21,10 @@ type ServerConfig struct {
 
 func (c *ServerConfig) BindAddress() string {
 	return fmt.Sprintf("%s:%d", c.Bind, c.Port)
+}
+
+type AppConfig struct {
+	SessionKey string
 }
 
 type AuthConfig struct {
