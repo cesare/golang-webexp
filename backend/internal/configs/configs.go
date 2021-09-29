@@ -12,6 +12,10 @@ type b64string struct {
 	bytes []byte
 }
 
+func (b64 *b64string) Bytes() []byte {
+	return b64.bytes
+}
+
 func (b64 *b64string) UnmarshalText(text []byte) error {
 	dst, err := base64.StdEncoding.DecodeString(string(text))
 	if err != nil {

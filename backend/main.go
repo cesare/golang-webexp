@@ -28,6 +28,6 @@ func main() {
 		os.Exit(111)
 	}
 
-	engine := http.Engine()
+	engine := http.Engine(config)
 	engine.Run(config.Server.BindAddress())
 }
