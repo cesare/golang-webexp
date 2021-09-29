@@ -1,11 +1,26 @@
 package configs
 
 import (
+	"encoding/base64"
 	"fmt"
 	"os"
 
 	"github.com/pelletier/go-toml/v2"
 )
+
+type b64string struct {
+	bytes []byte
+}
+
+func (b64 *b64string) UnmarshalText(text []byte) error {
+	dst, err := base64.StdEncoding.DecodeString(string(text))
+	if err != nil {
+		return err
+	}
+
+	b64.bytes = dst
+	return nil
+}
 
 type Config struct {
 	Server   ServerConfig
@@ -24,7 +39,7 @@ func (c *ServerConfig) BindAddress() string {
 }
 
 type AppConfig struct {
-	SessionKey string
+	SessionKey b64string
 }
 
 type AuthConfig struct {
