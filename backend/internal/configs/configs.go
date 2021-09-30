@@ -17,7 +17,8 @@ func (b64 *b64string) Bytes() []byte {
 }
 
 func (b64 *b64string) UnmarshalText(text []byte) error {
-	dst, err := base64.StdEncoding.DecodeString(string(text))
+	dst := make([]byte, len(text))
+	_, err := base64.StdEncoding.Decode(dst, text)
 	if err != nil {
 		return err
 	}
