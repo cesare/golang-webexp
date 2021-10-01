@@ -14,6 +14,9 @@ func Engine(config *configs.Config) *gin.Engine {
 	store := cookie.NewStore(config.App.SessionKey.Bytes())
 	engine.Use(sessions.Sessions("webexp-session", store))
 
+	authGroup := engine.Group("/auth")
+	CreateAuthRoutes(authGroup)
+
 	engine.GET("/", hello)
 	return engine
 }
