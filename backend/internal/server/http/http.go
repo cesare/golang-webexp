@@ -15,7 +15,7 @@ func Engine(config *configs.Config) *gin.Engine {
 	engine.Use(sessions.Sessions("webexp-session", store))
 
 	authGroup := engine.Group("/auth")
-	CreateAuthRoutes(authGroup)
+	CreateAuthRoutes(config, authGroup)
 
 	engine.GET("/", hello)
 	return engine
