@@ -10,7 +10,14 @@ import (
 
 func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 	group.GET("", func(c *gin.Context) {
-		authAttrs, _ := auth.NewAuthStart(config).Execute()
+		authAttrs, err := auth.NewAuthStart(config).Execute()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
 		c.JSON(http.StatusOK, gin.H{
 			"state":       authAttrs.State,
 			"callbackUri": authAttrs.CallbackUri,
