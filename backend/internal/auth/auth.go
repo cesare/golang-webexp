@@ -26,9 +26,11 @@ func (as *AuthStart) Execute() (*AuthAttributes, error) {
 	}
 
 	state := base64.RawURLEncoding.EncodeToString(rawState)
+	callbackUri := as.config.Frontend.CallbackUri()
+
 	attrs := AuthAttributes{
 		State:       state,
-		CallbackUri: "http://dummy.localhost/auth/callback",
+		CallbackUri: callbackUri,
 	}
 	return &attrs, nil
 }

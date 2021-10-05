@@ -57,6 +57,10 @@ type FrontendConfig struct {
 	CallbackPath string
 }
 
+func (f *FrontendConfig) CallbackUri() string {
+	return fmt.Sprintf("%s%s", f.BaseUri, f.CallbackPath)
+}
+
 type ConfigLoader struct {
 	path string
 }
