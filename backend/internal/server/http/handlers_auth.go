@@ -11,6 +11,9 @@ import (
 func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 	group.GET("", func(c *gin.Context) {
 		authAttrs, _ := auth.NewAuthStart(config).Execute()
-		c.JSON(http.StatusOK, authAttrs)
+		c.JSON(http.StatusOK, gin.H{
+			"state":       authAttrs.State,
+			"callbackUri": authAttrs.CallbackUri,
+		})
 	})
 }
