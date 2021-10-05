@@ -10,7 +10,7 @@ import (
 
 func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 	group.GET("", func(c *gin.Context) {
-		authAttrs := auth.NewAuthStart(config).Execute()
+		authAttrs, _ := auth.NewAuthStart(config).Execute()
 		c.JSON(http.StatusOK, authAttrs)
 	})
 }
