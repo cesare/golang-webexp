@@ -3,12 +3,13 @@ package auth
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"net/url"
 	"webexp/internal/configs"
 )
 
 type AuthAttributes struct {
-	State       string
-	CallbackUri string
+	State            string
+	AuthorizationUri string
 }
 
 type AuthStart struct {
@@ -26,11 +27,11 @@ func (as *AuthStart) Execute() (*AuthAttributes, error) {
 	}
 
 	state := base64.RawURLEncoding.EncodeToString(rawState)
-	callbackUri := as.config.Frontend.CallbackUri()
+	authorizationUri := as.authUri(state)
 
 	attrs := AuthAttributes{
-		State:       state,
-		CallbackUri: callbackUri,
+		State:            state,
+		AuthorizationUri: authorizationUri,
 	}
 	return &attrs, nil
 }
@@ -43,4 +44,22 @@ func (as *AuthStart) generateRawState() ([]byte, error) {
 	}
 
 	return bytes, nil
+}
+
+func (as *AuthStart) authUri(state string) string {
+	clientId := as.config.Auth.ClientId
+	callbackUri := as.config.Frontend.CallbackUri()
+
+	params := url.Values{}
+	params.Set("state", state)
+	params.Set("client_id", clientId)
+	params.Set("redirect_uri", callbackUri)
+
+	uri := url.URL{
+		Scheme:   "https",
+		Host:     "github.com",
+		Path:     "/login/oauth/authorize",
+		RawQuery: params.Encode(),
+	}
+	return uri.String()
 }

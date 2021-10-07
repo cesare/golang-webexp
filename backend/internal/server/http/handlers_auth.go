@@ -19,8 +19,8 @@ func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 		}
 
 		c.JSON(http.StatusOK, gin.H{
-			"state":       authAttrs.State,
-			"callbackUri": authAttrs.CallbackUri,
+			"state":            authAttrs.State,
+			"authorizationUri": authAttrs.AuthorizationUri,
 		})
 	})
 }
