@@ -5,6 +5,7 @@ import (
 	"webexp/internal/auth"
 	"webexp/internal/configs"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,8 +19,12 @@ func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 			return
 		}
 
+		session := sessions.Default(c)
+		session.Clear()
+		session.Set("auth-state", authAttrs.State)
+		session.Save()
+
 		c.JSON(http.StatusOK, gin.H{
-			"state":            authAttrs.State,
 			"authorizationUri": authAttrs.AuthorizationUri,
 		})
 	})
