@@ -5,11 +5,18 @@ import (
 	"webexp/internal/auth"
 	"webexp/internal/configs"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
+	group.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{config.Frontend.BaseUri},
+		AllowMethods:     []string{"POST"},
+		AllowCredentials: true,
+	}))
+
 	group.GET("", func(c *gin.Context) {
 		authAttrs, err := auth.NewAuthStart(config).Execute()
 		if err != nil {
