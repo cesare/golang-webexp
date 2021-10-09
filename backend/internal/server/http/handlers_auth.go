@@ -35,4 +35,51 @@ func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 			"authorizationUri": authAttrs.AuthorizationUri,
 		})
 	})
+
+	type calbackRequest struct {
+		State string `json:"state" binding:"required"`
+		Code  string `json:"code"  binding:"required"`
+	}
+
+	group.POST("/callback", func(c *gin.Context) {
+		var request calbackRequest
+		err := c.ShouldBindJSON(&request)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": "invalid request",
+			})
+			return
+		}
+
+		session := sessions.Default(c)
+		savedState, ok := session.Get("auth-state").(string)
+		if !ok || savedState != request.State {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": "states not match",
+			})
+		}
+
+		attrs := auth.CallbackAttributes{Code: request.Code}
+		results, err := auth.NewAuth(config, attrs).Execute()
+		if err != nil {
+			switch e := err.(type) {
+			case *auth.AuthRejected:
+				c.JSON(http.StatusUnauthorized, gin.H{
+					"message": e.Error(),
+				})
+			default:
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"message": e.Error(),
+				})
+			}
+			return
+		}
+
+		session.Clear()
+		session.Save()
+
+		c.JSON(http.StatusCreated, gin.H{
+			"token": results.Token,
+		})
+	})
 }
