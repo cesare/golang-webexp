@@ -17,7 +17,7 @@ func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 		AllowCredentials: true,
 	}))
 
-	group.GET("", func(c *gin.Context) {
+	group.POST("", func(c *gin.Context) {
 		authAttrs, err := auth.NewAuthStart(config).Execute()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{

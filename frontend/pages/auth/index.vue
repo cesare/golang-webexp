@@ -12,7 +12,7 @@ interface AuthStartResponse {
 
 export default {
   async fetch() {
-    const response: AuthStartResponse = await this.$http.$get("http://localhost:8000/auth")
+    const response: AuthStartResponse = await this.$http.$post("http://localhost:8000/auth")
     const authorizationUri = response.authorizationUri
     window.location.assign(authorizationUri)
   },
