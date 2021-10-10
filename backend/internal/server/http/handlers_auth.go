@@ -59,7 +59,10 @@ func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 			})
 		}
 
-		attrs := auth.CallbackAttributes{Code: request.Code}
+		attrs := auth.CallbackAttributes{
+			Code:  request.Code,
+			State: request.State,
+		}
 		results, err := auth.NewAuth(config, attrs).Execute()
 		if err != nil {
 			switch e := err.(type) {

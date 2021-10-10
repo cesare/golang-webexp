@@ -3,7 +3,8 @@ package auth
 import "webexp/internal/configs"
 
 type CallbackAttributes struct {
-	Code string
+	Code  string
+	State string
 }
 
 type AuthResults struct {
