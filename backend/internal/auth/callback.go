@@ -69,24 +69,7 @@ type tokenResponse struct {
 }
 
 func (r *tokenRequest) execute() (*tokenResponse, error) {
-	params := url.Values{
-		"client_id":     {r.config.Auth.ClientId},
-		"client_secret": {r.config.Auth.ClientSecret},
-		"code":          {r.attrs.Code},
-		"state":         {r.attrs.State},
-	}
-	requestBody := strings.NewReader(params.Encode())
-
-	uri := "https://github.com/login/oauth/access_token"
-	request, err := http.NewRequest(http.MethodPost, uri, requestBody)
-	if err != nil {
-		return nil, err
-	}
-
-	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	request.Header.Set("Accept", "application/json")
-
-	response, err := http.DefaultClient.Do(request)
+	response, err := r.request()
 	if err != nil {
 		return nil, err
 	}
@@ -105,4 +88,37 @@ func (r *tokenRequest) execute() (*tokenResponse, error) {
 	}
 
 	return &token, nil
+}
+
+func (r *tokenRequest) request() (*http.Response, error) {
+	body := r.createRequestBody()
+	request, err := r.createRequest(body)
+	if err != nil {
+		return nil, err
+	}
+
+	return http.DefaultClient.Do(request)
+}
+
+func (r *tokenRequest) createRequest(body io.Reader) (*http.Request, error) {
+	uri := "https://github.com/login/oauth/access_token"
+	request, err := http.NewRequest(http.MethodPost, uri, body)
+	if err != nil {
+		return nil, err
+	}
+
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Set("Accept", "application/json")
+
+	return request, nil
+}
+
+func (r *tokenRequest) createRequestBody() io.Reader {
+	params := url.Values{
+		"client_id":     {r.config.Auth.ClientId},
+		"client_secret": {r.config.Auth.ClientSecret},
+		"code":          {r.attrs.Code},
+		"state":         {r.attrs.State},
+	}
+	return strings.NewReader(params.Encode())
 }
