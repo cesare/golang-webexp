@@ -38,7 +38,12 @@ func NewAuth(config *configs.Config, attrs CallbackAttributes) *Auth {
 }
 
 func (a *Auth) Execute() (*AuthResults, error) {
-	_, err := a.requestToken()
+	token, err := a.requestToken()
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = a.requestUser(token.AccessToken)
 	if err != nil {
 		return nil, err
 	}
@@ -49,5 +54,10 @@ func (a *Auth) Execute() (*AuthResults, error) {
 
 func (a *Auth) requestToken() (*github.TokenResponse, error) {
 	request := github.NewTokenRequest(a.config, a.attrs.State, a.attrs.Code)
+	return request.Execute()
+}
+
+func (a *Auth) requestUser(accessToken string) (*github.UserResponse, error) {
+	request := github.NewUserRequest(accessToken)
 	return request.Execute()
 }
