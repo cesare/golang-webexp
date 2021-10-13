@@ -43,12 +43,17 @@ func (a *Auth) Execute() (*AuthResults, error) {
 		return nil, err
 	}
 
-	_, err = a.requestUser(token.AccessToken)
+	user, err := a.requestUser(token.AccessToken)
 	if err != nil {
 		return nil, err
 	}
 
-	results := AuthResults{Token: "dummy"}
+	t, err := NewTokenGenerator(a.config, user.Id).Generate()
+	if err != nil {
+		return nil, err
+	}
+
+	results := AuthResults{Token: t}
 	return &results, nil
 }
 
