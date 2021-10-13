@@ -48,8 +48,9 @@ type AppConfig struct {
 }
 
 type AuthConfig struct {
-	ClientId     string
-	ClientSecret string
+	ClientId        string
+	ClientSecret    string
+	TokenSigningKey b64string
 }
 
 type FrontendConfig struct {
