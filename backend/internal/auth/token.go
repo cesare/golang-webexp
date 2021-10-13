@@ -28,7 +28,9 @@ func (g *TokenGenerator) Generate() (string, error) {
 func (g *TokenGenerator) createClaims() jwt.RegisteredClaims {
 	now := time.Now()
 	issuedAt := jwt.NewNumericDate(now)
-	expiresAt := jwt.NewNumericDate(now.Add(3600))
+
+	ttl, _ := time.ParseDuration("1h")
+	expiresAt := jwt.NewNumericDate(now.Add(ttl))
 
 	claims := jwt.RegisteredClaims{
 		Subject:   g.identifier,
