@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"webexp/internal/auth/github"
 	"webexp/internal/configs"
 )
@@ -48,7 +49,8 @@ func (a *Auth) Execute() (*AuthResults, error) {
 		return nil, err
 	}
 
-	t, err := NewTokenGenerator(a.config, user.Id).Generate()
+	identifier := fmt.Sprintf("%d", user.Id)
+	t, err := NewTokenGenerator(a.config, identifier).Generate()
 	if err != nil {
 		return nil, err
 	}

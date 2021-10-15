@@ -12,7 +12,7 @@ type UserRequest struct {
 }
 
 type UserResponse struct {
-	Id    string `json:"id"`
+	Id    int64  `json:"id"`
 	Login string `json:"login"`
 	Name  string `json:"name"`
 }
