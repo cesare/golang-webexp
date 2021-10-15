@@ -50,6 +50,7 @@ func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": "states not match",
 			})
+			return
 		}
 
 		attrs := auth.CallbackAttributes{
