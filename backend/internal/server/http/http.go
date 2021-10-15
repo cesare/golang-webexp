@@ -15,8 +15,11 @@ func Engine(config *configs.Config) *gin.Engine {
 	store := cookie.NewStore(config.App.SessionKey.Bytes())
 	engine.Use(sessions.Sessions("webexp-session", store))
 	engine.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{config.Frontend.BaseUri},
-		AllowMethods:     []string{"POST"},
+		AllowOrigins: []string{config.Frontend.BaseUri},
+		AllowMethods: []string{"POST"},
+		AllowHeaders: []string{
+			"Content-Type",
+		},
 		AllowCredentials: true,
 	}))
 
