@@ -45,10 +45,20 @@ export default {
       console.log("invalid parameters")
       return
     }
+    const requestBody = JSON.stringify(request.body())
 
     try {
-      const response: CallbackResponse = await this.$http.$post("http://localhost:8000/auth/callback", request.body())
-      const token = response.token
+      const response = await globalThis.fetch("http://localhost:8000/auth/callback", {
+        method: "POST",
+        mode: "cors",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: requestBody,
+      })
+      const responseBody: CallbackResponse = await response.json()
+      const token = responseBody.token
       console.log(token)
     }
     catch (e) {

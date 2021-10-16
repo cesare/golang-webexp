@@ -12,8 +12,13 @@ interface AuthStartResponse {
 
 export default {
   async fetch() {
-    const response: AuthStartResponse = await this.$http.$post("http://localhost:8000/auth")
-    const authorizationUri = response.authorizationUri
+    const response = await globalThis.fetch("http://localhost:8000/auth", {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+    })
+    const body: AuthStartResponse = await response.json()
+    const authorizationUri = body.authorizationUri
     window.location.assign(authorizationUri)
   },
   fetchOnServer: false,
