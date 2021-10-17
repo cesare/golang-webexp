@@ -73,6 +73,7 @@ func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 		}
 
 		session.Clear()
+		session.Set("token", results.Token)
 		session.Save()
 
 		c.JSON(http.StatusCreated, gin.H{
