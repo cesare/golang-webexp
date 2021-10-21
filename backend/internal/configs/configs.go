@@ -29,6 +29,7 @@ func (b64 *b64string) UnmarshalText(text []byte) error {
 
 type Config struct {
 	Server   ServerConfig
+	Database DatabaseConfig
 	App      AppConfig
 	Auth     AuthConfig
 	Frontend FrontendConfig
@@ -41,6 +42,18 @@ type ServerConfig struct {
 
 func (c *ServerConfig) BindAddress() string {
 	return fmt.Sprintf("%s:%d", c.Bind, c.Port)
+}
+
+type DatabaseConfig struct {
+	Host     string
+	Port     uint16
+	Database string
+	User     string
+	Password string
+}
+
+func (c *DatabaseConfig) ConnectionString() string {
+	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s", c.User, c.Password, c.Host, c.Port, c.Database)
 }
 
 type AppConfig struct {
