@@ -28,6 +28,10 @@ func main() {
 		os.Exit(111)
 	}
 
-	engine := http.Engine(config)
+	engine, err := http.Engine(config)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to setup HTTP server engine: %s\n", err.Error())
+		os.Exit(111)
+	}
 	engine.Run(config.Server.BindAddress())
 }

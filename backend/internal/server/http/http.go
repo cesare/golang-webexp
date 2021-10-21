@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Engine(config *configs.Config) *gin.Engine {
+func Engine(config *configs.Config) (*gin.Engine, error) {
 	engine := gin.Default()
 
 	store := cookie.NewStore(config.App.SessionKey.Bytes())
@@ -27,5 +27,5 @@ func Engine(config *configs.Config) *gin.Engine {
 	CreateAuthRoutes(config, authGroup)
 
 	engine.GET("/", hello)
-	return engine
+	return engine, nil
 }
