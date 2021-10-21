@@ -2,6 +2,7 @@ package http
 
 import (
 	"webexp/internal/configs"
+	"webexp/internal/server/http/middlewares"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
@@ -10,7 +11,13 @@ import (
 )
 
 func Engine(config *configs.Config) (*gin.Engine, error) {
+	databaseMiddleware, err := middlewares.DatabaseMiddleware(config)
+	if err != nil {
+		return nil, err
+	}
+
 	engine := gin.Default()
+	engine.Use(databaseMiddleware)
 
 	store := cookie.NewStore(config.App.SessionKey.Bytes())
 	engine.Use(sessions.Sessions("webexp-session", store))
