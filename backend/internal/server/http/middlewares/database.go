@@ -5,6 +5,7 @@ import (
 	"webexp/internal/configs"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
 )
 
 func DatabaseMiddleware(config *configs.Config) (gin.HandlerFunc, error) {
