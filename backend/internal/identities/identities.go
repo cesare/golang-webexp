@@ -21,7 +21,18 @@ func NewIdentityRepository(db *sql.DB) *IdentityRepository {
 }
 
 func (r *IdentityRepository) Find(id string) (*Identity, error) {
-	return nil, nil
+	identity := Identity{}
+	query := "select id, provider_identifier, alive, registered_at from identities where id = $1"
+	row := r.db.QueryRow(query, id)
+	err := row.Scan(&identity.Id, &identity.PrividerIdentifier, &identity.Alive, &identity.RegisterdAt)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return &identity, nil
 }
 
 type RegistrationDataset struct {
