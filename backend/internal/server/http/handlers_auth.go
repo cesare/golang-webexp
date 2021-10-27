@@ -3,6 +3,7 @@ package http
 import (
 	"net/http"
 	"webexp/internal/auth"
+	"webexp/internal/auth/identity"
 	"webexp/internal/configs"
 
 	"github.com/gin-contrib/sessions"
@@ -72,12 +73,22 @@ func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 			return
 		}
 
+		db := database(c)
+		registration := identity.NewIdentityRegistration(db, results.Identifier)
+		identity, err := registration.Execute()
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
 		session.Clear()
-		session.Set("token", results.Token)
+		session.Set("sub", identity.Id)
 		session.Save()
 
 		c.JSON(http.StatusCreated, gin.H{
-			"token": results.Token,
+			"sub": identity.Id,
 		})
 	})
 }
