@@ -4,15 +4,15 @@ import (
 	"net/http"
 	"webexp/internal/auth"
 	"webexp/internal/auth/identity"
-	"webexp/internal/configs"
+	"webexp/internal/webexp"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
-func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
+func CreateAuthRoutes(context *webexp.Context, group *gin.RouterGroup) {
 	group.POST("", func(c *gin.Context) {
-		authAttrs, err := auth.NewAuthStart(config).Execute()
+		authAttrs, err := auth.NewAuthStart(context.Config).Execute()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": err.Error(),
@@ -58,7 +58,7 @@ func CreateAuthRoutes(config *configs.Config, group *gin.RouterGroup) {
 			Code:  request.Code,
 			State: request.State,
 		}
-		results, err := auth.NewAuth(config, attrs).Execute()
+		results, err := auth.NewAuth(context.Config, attrs).Execute()
 		if err != nil {
 			switch e := err.(type) {
 			case *auth.AuthRejected:
