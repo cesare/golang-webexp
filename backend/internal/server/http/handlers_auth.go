@@ -73,8 +73,7 @@ func CreateAuthRoutes(context *webexp.Context, group *gin.RouterGroup) {
 			return
 		}
 
-		db := database(c)
-		registration := identity.NewIdentityRegistration(db, results.Identifier)
+		registration := identity.NewIdentityRegistration(context.Database, results.Identifier)
 		identity, err := registration.Execute()
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{
