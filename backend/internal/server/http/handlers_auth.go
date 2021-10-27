@@ -12,7 +12,7 @@ import (
 
 func CreateAuthRoutes(context *webexp.Context, group *gin.RouterGroup) {
 	group.POST("", func(c *gin.Context) {
-		authAttrs, err := auth.NewAuthStart(context.Config).Execute()
+		authAttrs, err := auth.NewAuthStart(context.Config()).Execute()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": err.Error(),
@@ -58,7 +58,7 @@ func CreateAuthRoutes(context *webexp.Context, group *gin.RouterGroup) {
 			Code:  request.Code,
 			State: request.State,
 		}
-		results, err := auth.NewAuth(context.Config, attrs).Execute()
+		results, err := auth.NewAuth(context.Config(), attrs).Execute()
 		if err != nil {
 			switch e := err.(type) {
 			case *auth.AuthRejected:
@@ -73,7 +73,7 @@ func CreateAuthRoutes(context *webexp.Context, group *gin.RouterGroup) {
 			return
 		}
 
-		registration := identity.NewIdentityRegistration(context.Database, results.Identifier)
+		registration := identity.NewIdentityRegistration(context.Database(), results.Identifier)
 		identity, err := registration.Execute()
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{

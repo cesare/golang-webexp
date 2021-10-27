@@ -8,8 +8,8 @@ import (
 )
 
 type Context struct {
-	Config   *configs.Config
-	Database *sql.DB
+	config   *configs.Config
+	database *sql.DB
 }
 
 func NewContext(config *configs.Config) (*Context, error) {
@@ -19,9 +19,17 @@ func NewContext(config *configs.Config) (*Context, error) {
 	}
 
 	context := Context{
-		Config:   config,
-		Database: db,
+		config:   config,
+		database: db,
 	}
 
 	return &context, nil
+}
+
+func (context *Context) Config() *configs.Config {
+	return context.config
+}
+
+func (context *Context) Database() *sql.DB {
+	return context.database
 }
