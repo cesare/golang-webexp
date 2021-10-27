@@ -50,10 +50,20 @@ type DatabaseConfig struct {
 	Database string
 	User     string
 	Password string
+	UseSSL   bool
 }
 
 func (c *DatabaseConfig) ConnectionString() string {
-	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s", c.User, c.Password, c.Host, c.Port, c.Database)
+	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=%s",
+		c.User, c.Password, c.Host, c.Port, c.Database, c.sslMode())
+}
+
+func (c *DatabaseConfig) sslMode() string {
+	if c.UseSSL {
+		return "require"
+	} else {
+		return "disable"
+	}
 }
 
 type AppConfig struct {
