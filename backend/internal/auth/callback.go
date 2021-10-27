@@ -12,7 +12,8 @@ type CallbackAttributes struct {
 }
 
 type AuthResults struct {
-	Token string
+	Token      string
+	Identifier string
 }
 
 type AuthRejected struct {
@@ -55,7 +56,10 @@ func (a *Auth) Execute() (*AuthResults, error) {
 		return nil, err
 	}
 
-	results := AuthResults{Token: t}
+	results := AuthResults{
+		Token:      t,
+		Identifier: identifier,
+	}
 	return &results, nil
 }
 
